@@ -12,11 +12,11 @@ def generate_frames():
         if not success:
             break
         else:
-            ret,buffer=cv2.imencode('.jpg',frame)
+            ret,buffer=cv2.imencode('.jpg',frame)   # encoding it
             frame=buffer.tobytes()
 
-        yield(b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+        yield(b'--frame\r\n'                                                    # used yield here since it will be generating things continuously, not only one output to use return
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')           # need to give content type whenever we are doing cv.
 
 
 @app.route('/')
@@ -25,7 +25,7 @@ def index():
 
 @app.route('/video')
 def video():
-    return Response(generate_frames(),mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(generate_frames(),mimetype='multipart/x-mixed-replace; boundary=frame') # Mimetype is also important in this place, but not sure of the reason
 
 if __name__=="__main__":
     app.run(debug=True)
